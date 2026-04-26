@@ -68,8 +68,10 @@ class IngredientController extends Controller
 
     public function destroy(Ingredient $inventory)
     {
+        // Soft-delete only — use the Archive module to restore or permanently delete
         $inventory->delete();
-        return redirect()->route('inventory.index')->with('success', 'Ingredient removed.');
+        return redirect()->route('inventory.index')
+                         ->with('success', "'{$inventory->name}' archived. You can restore it from Archives.");
     }
 
     public function stockIn(Request $request, Ingredient $ingredient)

@@ -2,7 +2,6 @@
 
 @section('title', 'Menu & Costing')
 @section('page-title', 'Menu & Costing')
-@section('page-subtitle', 'Manage items, build recipes, and analyze margins')
 
 @section('content')
 
@@ -103,7 +102,7 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-medium">{{ $item->category }}</span>
                     </td>
                     <td class="text-right font-semibold text-slate-800">₱{{ number_format($item->selling_price, 2) }}</td>
-                    <td class="text-right text-slate-500 text-sm">₱{{ number_format($item->computed_cost, 4) }}</td>
+                    <td class="text-right text-slate-500 text-sm">₱{{ number_format($item->computed_cost, 2) }}</td>
                     <td class="text-right font-semibold text-emerald-600">₱{{ number_format($profit, 2) }}</td>
                     <td class="text-center">
                         <span class="text-xs font-bold px-2.5 py-1 rounded-full {{ $marginColor }}">
@@ -124,9 +123,9 @@
                             <a href="{{ route('menu-items.edit', $item) }}"
                                class="text-xs text-slate-400 hover:text-slate-600">Edit</a>
                             <form method="POST" action="{{ route('menu-items.destroy', $item) }}"
-                                  onsubmit="return confirm('Remove {{ addslashes($item->name) }}?')">
+                                  onsubmit="return confirm('Archive {{ addslashes($item->name) }}? It can be restored from Archives.')">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="text-xs text-red-400 hover:text-red-600">Delete</button>
+                                <button type="submit" class="text-xs text-amber-500 hover:text-amber-700">Archive</button>
                             </form>
                         </div>
                     </td>

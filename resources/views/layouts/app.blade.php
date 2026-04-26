@@ -289,17 +289,72 @@
             @endif
         </a>
 
+        <a href="{{ route('food-safety.temperature') }}"
+           class="nav-item {{ request()->routeIs('food-safety.*') ? 'active' : '' }}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            Food Safety
+        </a>
+
+        <a href="{{ route('waste.index') }}"
+           class="nav-item {{ request()->routeIs('waste.*') ? 'active' : '' }}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            Waste & Expiry
+        </a>
+
         {{-- Admin --}}
         @if(auth()->user()->isAdmin())
         <div class="nav-section-label mt-2">Admin</div>
 
         <a href="{{ route('reports.sales') }}"
-           class="nav-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+           class="nav-item {{ request()->routeIs('reports.sales') ? 'active' : '' }}">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
             </svg>
-            Reports
+            Sales Report
+        </a>
+
+        <a href="{{ route('reports.waste') }}"
+           class="nav-item {{ request()->routeIs('reports.waste') ? 'active' : '' }}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            Waste Report
+        </a>
+
+        <a href="{{ route('reports.food-safety') }}"
+           class="nav-item {{ request()->routeIs('reports.food-safety') ? 'active' : '' }}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            Safety Report
+        </a>
+
+        <a href="{{ route('archives.menu-items') }}"
+           class="nav-item {{ request()->routeIs('archives.*') ? 'active' : '' }}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+            </svg>
+            Archives
+            @php
+                $archivedCount = \App\Models\MenuItem::onlyTrashed()->count()
+                    + \App\Models\Ingredient::onlyTrashed()->count()
+                    + \App\Models\User::onlyTrashed()->count();
+            @endphp
+            @if($archivedCount > 0)
+                <span class="ml-auto bg-slate-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 leading-none">
+                    {{ $archivedCount }}
+                </span>
+            @endif
         </a>
 
         <a href="{{ route('users.index') }}"
@@ -357,10 +412,34 @@
                 <div id="notifDropdown"
                      class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden">
                     <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
-                        <span class="font-semibold text-sm text-slate-700">Low Stock Alerts</span>
-                        <span class="text-xs bg-red-100 text-red-600 font-bold px-2 py-0.5 rounded-full">{{ $lowCount }}</span>
+                        <span class="font-semibold text-sm text-slate-700">Alerts</span>
+                        @php
+                            $tempAlertsToday = \App\Models\TemperatureLog::where('log_date', today()->format('Y-m-d'))
+                                ->whereRaw('temperature_celsius NOT BETWEEN min_safe_celsius AND max_safe_celsius')
+                                ->count();
+                            $totalAlerts = $lowCount + $tempAlertsToday;
+                        @endphp
+                        <span class="text-xs bg-red-100 text-red-600 font-bold px-2 py-0.5 rounded-full">{{ $totalAlerts }}</span>
                     </div>
                     <div class="max-h-64 overflow-y-auto divide-y divide-slate-50">
+                        {{-- Temperature alerts --}}
+                        @if($tempAlertsToday > 0)
+                        <div class="px-4 py-2 bg-red-50">
+                            <p class="text-xs font-bold text-red-600 uppercase tracking-wide mb-1">🌡️ Temperature Alerts Today</p>
+                            @foreach(\App\Models\TemperatureLog::where('log_date', today()->format('Y-m-d'))->whereRaw('temperature_celsius NOT BETWEEN min_safe_celsius AND max_safe_celsius')->get() as $alert)
+                            <div class="flex items-center justify-between py-1">
+                                <p class="text-sm font-medium text-red-700">{{ $alert->location }}</p>
+                                <span class="text-xs font-bold text-red-600">{{ $alert->temperature_celsius }}°C</span>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endif
+                        {{-- Low stock alerts --}}
+                        @if($lowCount > 0)
+                        <div class="px-4 py-2">
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">📦 Low Stock</p>
+                        </div>
+                        @endif
                         @foreach(\App\Models\Ingredient::whereRaw('quantity_in_stock <= low_stock_threshold')->get() as $ing)
                         <div class="px-4 py-2.5 flex items-center justify-between hover:bg-slate-50">
                             <div>
@@ -370,8 +449,8 @@
                             <span class="low-stock-badge">Low</span>
                         </div>
                         @endforeach
-                        @if($lowCount === 0)
-                        <div class="px-4 py-6 text-center text-sm text-slate-400">All stock levels OK ✓</div>
+                        @if($totalAlerts === 0)
+                        <div class="px-4 py-6 text-center text-sm text-slate-400">All clear ✓</div>
                         @endif
                     </div>
                     <div class="px-4 py-2 border-t border-slate-100">

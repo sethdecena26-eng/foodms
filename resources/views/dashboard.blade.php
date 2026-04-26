@@ -61,12 +61,7 @@
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Today's Revenue</p>
                 <p class="kpi-value text-slate-800 mt-1">₱{{ number_format($todayStats->revenue ?? 0, 2) }}</p>
             </div>
-            <div class="kpi-icon" style="background:#fff7ed">
-                <svg class="w-5 h-5" style="color:var(--accent)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
+            
         </div>
         @if($revenueChange !== null)
         <p class="text-xs mt-3 {{ $revenueChange >= 0 ? 'text-green-500' : 'text-red-500' }}">
@@ -82,12 +77,7 @@
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Today's Net Profit</p>
                 <p class="kpi-value text-emerald-600 mt-1">₱{{ number_format($todayStats->profit ?? 0, 2) }}</p>
             </div>
-            <div class="kpi-icon" style="background:#f0fdf4">
-                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                </svg>
-            </div>
+           
         </div>
         @php
             $margin = ($todayStats->revenue ?? 0) > 0
@@ -104,12 +94,7 @@
                 <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Orders Today</p>
                 <p class="kpi-value text-slate-800 mt-1">{{ number_format($todayStats->order_count ?? 0) }}</p>
             </div>
-            <div class="kpi-icon" style="background:#eff6ff">
-                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                </svg>
-            </div>
+          
         </div>
         <p class="text-xs mt-3 text-slate-400">
             Avg ₱{{ $todayStats->order_count > 0 ? number_format($todayStats->revenue / $todayStats->order_count, 2) : '0.00' }} / order
@@ -127,18 +112,68 @@
                     {{ $lowStockCount }}
                 </p>
             </div>
-            <div class="kpi-icon {{ $lowStockCount > 0 ? '' : '' }}" style="background:{{ $lowStockCount > 0 ? '#fef2f2' : '#f8fafc' }}">
-                <svg class="w-5 h-5 {{ $lowStockCount > 0 ? 'text-red-500' : 'text-slate-400' }}"
-                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
-            </div>
+            
         </div>
         <a href="{{ route('inventory.index') }}" class="text-xs mt-3 inline-block
            {{ $lowStockCount > 0 ? 'text-red-500 font-semibold hover:underline' : 'text-slate-400' }}">
             {{ $lowStockCount > 0 ? 'View & restock →' : 'All levels normal ✓' }}
         </a>
+    </div>
+</div>
+
+{{-- ═══════════════════════════════ NEW MODULE KPIs ═══ --}}
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+
+    {{-- Today's waste loss --}}
+    <div class="kpi-card {{ $todayWasteLoss > 0 ? 'border-orange-200 bg-orange-50' : '' }}">
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Today's Waste Loss</p>
+                <p class="text-2xl font-display font-bold {{ $todayWasteLoss > 0 ? 'text-orange-600' : 'text-slate-800' }} mt-1">
+                    ₱{{ number_format($todayWasteLoss, 2) }}
+                </p>
+            </div>
+           
+        </div>
+        <a href="{{ route('waste.index') }}" class="text-xs mt-3 inline-block text-slate-400 hover:underline">
+            Month: ₱{{ number_format($monthWasteLoss, 2) }} →
+        </a>
+    </div>
+
+    {{-- Temperature alerts --}}
+    <div class="kpi-card {{ $tempAlerts > 0 ? 'border-red-200 bg-red-50' : '' }}">
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-xs font-semibold {{ $tempAlerts > 0 ? 'text-red-400' : 'text-slate-400' }} uppercase tracking-wider">Temp Alerts Today</p>
+                <p class="text-2xl font-display font-bold {{ $tempAlerts > 0 ? 'text-red-600' : 'text-slate-800' }} mt-1">{{ $tempAlerts }}</p>
+            </div>
+            
+        </div>
+        <a href="{{ route('food-safety.temperature') }}" class="text-xs mt-3 inline-block
+           {{ $tempAlerts > 0 ? 'text-red-500 font-semibold hover:underline' : 'text-slate-400' }}">
+            {{ $tempAlerts > 0 ? 'View alerts →' : $tempLogsToday . ' logs today ✓' }}
+        </a>
+    </div>
+
+    {{-- HACCP --}}
+    <div class="kpi-card {{ $haccpRate < 80 ? 'border-amber-200 bg-amber-50' : '' }}">
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">HACCP (7-day)</p>
+                <p class="text-2xl font-display font-bold {{ $haccpRate >= 90 ? 'text-emerald-600' : ($haccpRate >= 70 ? 'text-amber-600' : 'text-red-600') }} mt-1">
+                    {{ $haccpRate }}%
+                </p>
+            </div>
+
+        </div>
+        <div class="flex gap-3 mt-3 text-xs">
+            <span class="{{ $todayOpeningDone ? 'text-emerald-500' : 'text-amber-500' }}">
+                {{ $todayOpeningDone ? '✓' : '○' }} Opening
+            </span>
+            <span class="{{ $todayClosingDone ? 'text-emerald-500' : 'text-slate-300' }}">
+                {{ $todayClosingDone ? '✓' : '○' }} Closing
+            </span>
+        </div>
     </div>
 </div>
 

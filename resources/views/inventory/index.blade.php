@@ -76,7 +76,7 @@
                     </td>
                     <td class="text-right">
                         <p class="font-semibold {{ $isOut ? 'text-red-500' : ($isLow ? 'text-amber-500' : 'text-slate-700') }}">
-                            {{ number_format($ingredient->quantity_in_stock, 2) }}
+                            {{ number_format($ingredient->quantity_in_stock, 0) }}
                         </p>
                         {{-- Mini progress bar --}}
                         <div class="w-16 h-1 bg-slate-100 rounded-full ml-auto mt-1 overflow-hidden">
@@ -85,8 +85,8 @@
                             </div>
                         </div>
                     </td>
-                    <td class="text-right text-sm text-slate-500">{{ number_format($ingredient->low_stock_threshold, 2) }}</td>
-                    <td class="text-right text-sm text-slate-700">₱{{ number_format($ingredient->cost_per_unit, 4) }}</td>
+                    <td class="text-right text-sm text-slate-500">{{ number_format($ingredient->low_stock_threshold, 0) }}</td>
+                    <td class="text-right text-sm text-slate-700">₱{{ number_format($ingredient->cost_per_unit, 2) }}</td>
                     <td>
                         @if($isOut)
                             <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-600">Out of Stock</span>
@@ -103,6 +103,8 @@
                                     class="text-xs font-semibold text-blue-600 hover:underline px-2 py-1 rounded-lg hover:bg-blue-50 transition-colors">
                                 Stock In
                             </button>
+                            <a href="{{ route('inventory.show', $ingredient) }}"
+                               class="text-xs text-slate-400 hover:text-slate-600 px-1">Detail</a>
                             @if(auth()->user()->isAdmin())
                             <a href="{{ route('inventory.edit', $ingredient) }}"
                                class="text-xs text-slate-400 hover:text-slate-600 px-1">Edit</a>

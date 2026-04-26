@@ -9,6 +9,12 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 
+use App\Http\Controllers\FoodSafetyController;
+use App\Http\Controllers\WasteController;
+
+use App\Http\Controllers\ArchiveController;
+
+
 // ── Public ────────────────────────────────────────────────────────────────────
 Route::get('/', fn () => redirect()->route('login'));
 
@@ -42,6 +48,21 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         // Reports
         Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
         Route::get('/reports/ingredient-usage', [ReportController::class, 'ingredientUsage'])->name('reports.ingredient-usage');
+        Route::get('/reports/waste', [ReportController::class, 'waste'])->name('reports.waste');
+        Route::get('/reports/food-safety', [ReportController::class, 'foodSafety'])->name('reports.food-safety');
+
+        // ── Food Safety & Compliance ───────────────────────────────────────────
+        Route::get('/food-safety/temperature',  [FoodSafetyController::class, 'temperatureIndex'])->name('food-safety.temperature');
+        Route::post('/food-safety/temperature', [FoodSafetyController::class, 'storeTemperature'])->name('food-safety.temperature.store');
+        Route::delete('/food-safety/temperature/{temperatureLog}', [FoodSafetyController::class, 'destroyTemperature'])->name('food-safety.temperature.destroy');
+
+        Route::get('/food-safety/haccp',  [FoodSafetyController::class, 'haccpIndex'])->name('food-safety.haccp');
+        Route::post('/food-safety/haccp', [FoodSafetyController::class, 'storeHaccp'])->name('food-safety.haccp.store');
+
+        // ── Waste & Expiry Management ─────────────────────────────────────────
+        Route::get('/waste',                [WasteController::class, 'index'])->name('waste.index');
+        Route::post('/waste',               [WasteController::class, 'store'])->name('waste.store');
+        Route::delete('/waste/{wasteLog}',  [WasteController::class, 'destroy'])->name('waste.destroy');
     });
 
     // ── Admin only ────────────────────────────────────────────────────────────
@@ -62,6 +83,33 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         // Orders management
         Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
         Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
+        // HACCP template item management (admin only)
+        Route::get('/food-safety/haccp-items',                    [FoodSafetyController::class, 'haccpItems'])->name('food-safety.haccp-items');
+        Route::post('/food-safety/haccp-items',                   [FoodSafetyController::class, 'storeHaccpItem'])->name('food-safety.haccp-items.store');
+        Route::put('/food-safety/haccp-items/{haccpItem}',        [FoodSafetyController::class, 'updateHaccpItem'])->name('food-safety.haccp-items.update');
+        Route::delete('/food-safety/haccp-items/{haccpItem}',     [FoodSafetyController::class, 'destroyHaccpItem'])->name('food-safety.haccp-items.destroy');
+
+        // ── Archive & Restore ─────────────────────────────────────────────────
+        // Archive pages (view soft-deleted records)
+        Route::get('/archives/menu-items',   [ArchiveController::class, 'menuItems'])->name('archives.menu-items');
+        Route::get('/archives/ingredients',  [ArchiveController::class, 'ingredients'])->name('archives.ingredients');
+        Route::get('/archives/users',        [ArchiveController::class, 'users'])->name('archives.users');
+
+        // Archive (soft-delete) actions
+        Route::delete('/archives/menu-items/{menuItem}/archive',   [ArchiveController::class, 'archiveMenuItem'])->name('archives.menu-items.archive');
+        Route::delete('/archives/ingredients/{ingredient}/archive', [ArchiveController::class, 'archiveIngredient'])->name('archives.ingredients.archive');
+        Route::delete('/archives/users/{user}/archive',            [ArchiveController::class, 'archiveUser'])->name('archives.users.archive');
+
+        // Restore actions
+        Route::patch('/archives/menu-items/{id}/restore',   [ArchiveController::class, 'restoreMenuItem'])->name('archives.menu-items.restore');
+        Route::patch('/archives/ingredients/{id}/restore',  [ArchiveController::class, 'restoreIngredient'])->name('archives.ingredients.restore');
+        Route::patch('/archives/users/{id}/restore',        [ArchiveController::class, 'restoreUser'])->name('archives.users.restore');
+
+        // Permanent delete (irreversible — requires double confirm in UI)
+        Route::delete('/archives/menu-items/{id}/force',   [ArchiveController::class, 'forceDeleteMenuItem'])->name('archives.menu-items.force');
+        Route::delete('/archives/ingredients/{id}/force',  [ArchiveController::class, 'forceDeleteIngredient'])->name('archives.ingredients.force');
+        Route::delete('/archives/users/{id}/force',        [ArchiveController::class, 'forceDeleteUser'])->name('archives.users.force');
     });
 });
 

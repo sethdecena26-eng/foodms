@@ -7,7 +7,7 @@
 @push('styles')
 <style>
     /* Override default padding for POS — it needs full height */
-    main.page-content { padding: 0 !important; overflow: hidden; }
+    main.page-content { padding: 10 !important; overflow: hidden; }
 </style>
 @endpush
  

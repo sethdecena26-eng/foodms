@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(HaccpItemSeeder::class);
         // ── Roles ──────────────────────────────────────────────────────────────
         $admin    = Role::create(['name' => 'admin',    'label' => 'Administrator']);
         $employee = Role::create(['name' => 'employee', 'label' => 'Employee']);

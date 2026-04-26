@@ -2,7 +2,7 @@
 
 @section('title', 'Archives — Users')
 @section('page-title', 'Archives')
-@section('page-subtitle', 'Archived records — nothing is permanently deleted until you choose')
+@section('page-subtitle', 'Archived records')
 
 @section('content')
 
@@ -29,16 +29,7 @@
 </div>
 
 {{-- Info banner --}}
-<div class="flex items-start gap-3 px-4 py-3 bg-blue-50 border border-blue-100 rounded-xl mb-5 text-sm text-blue-700">
-    <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-    </svg>
-    <span>
-        Archived records are <strong>hidden from active use</strong> but never lost.
-        Restore them at any time. Permanent deletion requires a second confirmation and cannot be undone.
-    </span>
-</div>
+
 
 <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
     <div class="px-5 py-4 border-b border-slate-100">

@@ -94,6 +94,12 @@
                     @endforelse
                 </tbody>
             </table>
+            @if($daily->count() > 0)
+            <div class="px-5 py-3 border-t border-slate-100 text-xs text-slate-400">
+                Showing all {{ $daily->count() }} day{{ $daily->count() !== 1 ? 's' : '' }} in selected range.
+                Adjust the date filter above to narrow results.
+            </div>
+            @endif
         </div>
     </div>
 

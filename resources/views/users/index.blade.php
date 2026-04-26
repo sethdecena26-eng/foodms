@@ -2,7 +2,7 @@
 
 @section('title', 'User Management')
 @section('page-title', 'User Management')
-@section('page-subtitle', 'Manage staff accounts and role permissions')
+@section('page-subtitle', 'Accounts & role permissions')
 
 @section('content')
 
@@ -96,10 +96,10 @@
                         </a>
                         @if($user->id !== auth()->id())
                         <form method="POST" action="{{ route('users.destroy', $user) }}"
-                              onsubmit="return confirm('Remove {{ addslashes($user->name) }}?')">
+                              onsubmit="return confirm('Archive {{ addslashes($user->name) }}? They can be restored from Archives.')">
                             @csrf @method('DELETE')
-                            <button type="submit" class="text-xs text-red-400 hover:text-red-600 transition-colors">
-                                Delete
+                            <button type="submit" class="text-xs text-amber-500 hover:text-amber-700 transition-colors">
+                                Archive
                             </button>
                         </form>
                         @endif
