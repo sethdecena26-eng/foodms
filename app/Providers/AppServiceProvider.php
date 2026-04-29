@@ -11,12 +11,17 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    
     public function register(): void {}
 
     public function boot(): void
     {
+        if (env('APP_ENV') === 'production') {
+
+            \URL::forceScheme('https');}
         // Recalculate margin when selling_price changes on the item itself
         MenuItem::observe(MenuItemObserver::class);
+        
 
         // Cascade cost recalculation to all menu items when an ingredient's
         // cost_per_unit is updated — fixes the gap where price changes on
