@@ -7,10 +7,12 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",
+        "laravel/octane": "^2.17",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^4.2"
     },
     "require-dev": {
+        "beyondcode/laravel-er-diagram-generator": "^6.0",
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.4",
         "laravel/pint": "^1.13",

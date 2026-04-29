@@ -14,7 +14,6 @@ use App\Http\Controllers\WasteController;
 
 use App\Http\Controllers\ArchiveController;
 
-
 // ── Public ────────────────────────────────────────────────────────────────────
 Route::get('/', fn () => redirect()->route('login'));
 
@@ -40,9 +39,8 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
              ->name('orders.store');
         Route::get('/pos/order/{order}/receipt', [OrderController::class, 'receipt'])->name('orders.receipt');
 
-        // Inventory (read + stock-in for employees)
-        Route::get('/inventory', [IngredientController::class, 'index'])->name('inventory.index');
-        Route::get('/inventory/{inventory}', [IngredientController::class, 'show'])->name('inventory.show');
+        // Inventory — employees can view index, view detail, and stock-in
+        Route::get('/inventory',               [IngredientController::class, 'index'])->name('inventory.index');
         Route::post('/inventory/{ingredient}/stock-in', [IngredientController::class, 'stockIn'])->name('inventory.stock-in');
 
         // Reports
@@ -73,8 +71,9 @@ Route::middleware(['auth', 'verified', 'has.role'])->group(function () {
         Route::post('menu-items/{menuItem}/sync-ingredients', [MenuItemController::class, 'syncIngredients'])
              ->name('menu-items.sync-ingredients');
 
-        // Inventory CRUD (admin can create/edit/delete/adjust)
-        Route::resource('inventory', IngredientController::class)->except(['index', 'show']);
+        // Inventory CRUD — full resource for admin (create, store, show, edit, update, destroy)
+        // index is already defined in the employee group above
+        Route::resource('inventory', IngredientController::class)->except(['index']);
         Route::post('/inventory/{ingredient}/adjust', [IngredientController::class, 'adjust'])->name('inventory.adjust');
 
         // User Management (admin creates all accounts here)

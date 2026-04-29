@@ -216,7 +216,7 @@
 <body class="h-full flex overflow-hidden bg-slate-50">
 
 {{-- ═══════════════════════════════════════════════════════ SIDEBAR ═══ --}}
-<aside id="app-sidebar" class="flex flex-col h-full flex-shrink-0 overflow-y-auto">
+<aside id="app-sidebar" class="flex flex-col h-full flex-shrink-0 overflow-y-hidden hover:overflow-y-auto transition-all">
 
     {{-- Logo --}}
     <div class="flex items-center gap-2.5 px-5 py-5 border-b border-white/10">
@@ -516,7 +516,7 @@
     @endif
 
     {{-- ── Page body ───────────────────────────────────────────────── --}}
-    <main class="flex-1 overflow-y-auto p-6 page-content">
+    <main class="flex-1 overflow-y-auto p-4 md:p-6 page-content">
         @yield('content')
     </main>
 </div>
